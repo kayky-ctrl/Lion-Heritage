@@ -5,55 +5,78 @@
 @section('content')
 <div class="container py-4">
 
-    <h1 class="mb-4">Heritage Sites</h1>
-
-    {{-- Subpastas --}}
-    @if (!empty($folders))
-        <h2 class="h5 mt-3">Subfolders</h2>
-        <ul class="list-group mb-4">
-            @foreach ($folders as $folder)
-                <li class="list-group-item">
-                    <a href="{{ url('01_module_c/heritages/' . trim($path . '/' . $folder, '/')) }}">
-                        📁 {{ ucfirst($folder) }}
-                    </a>
-                </li>
-            @endforeach
-        </ul>
-    @endif
-
-    {{-- Páginas --}}
-    @if (!empty($pages))
-        <h2 class="h5 mt-3">Pages</h2>
-        <div class="list-group">
-            @foreach ($pages as $page)
-                <a href="{{ url('01_module_c/heritages/' . $page['path']) }}" class="list-group-item list-group-item-action">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">{{ is_array($page['title'] ?? '') ? implode(' ', $page['title']) : ($page['title'] ?? 'No Title') }}</h5>
-                        <small>{{ \Carbon\Carbon::parse($page['date'])->format('d/m/Y') }}</small>
-                    </div>
-                    
-                    @if (!empty($page['summary']))
-                        <p class="mb-1">{{ is_array($page['summary'] ?? '') ? implode(' ', $page['summary']) : ($page['summary'] ?? '') }}</p>
-                    @endif
-
-                    {{-- Exibir tags se existirem --}}
-                    @if (!empty($page['tags']) && is_array($page['tags']) && count($page['tags']) > 0)
-                        <small>
-                            @foreach ($page['tags'] as $tag)
-                                @if (!empty(trim($tag)))
-                                    <a href="{{ url('01_module_c/tags/' . urlencode($tag)) }}" class="badge bg-secondary text-decoration-none">
-                                        {{ $tag }}
-                                    </a>
-                                @endif
-                            @endforeach
-                        </small>
-                    @endif
-                </a>
-            @endforeach
+    {{-- Título principal --}}
+    <div class="d-flex justify-content-center mb-4">
+        <div class="bg-dark text-white rounded-3 px-4 py-2 fw-bold fs-4 text-center shadow-sm">
+            Listing Page Layout
         </div>
-    @else
-        <p class="text-muted">No pages found in this folder.</p>
-    @endif
+    </div>
+
+    {{-- Layout principal: Lista + Sidebar --}}
+    <div style="display: flex; flex-direction: row; gap: 2.5rem; align-items: flex-start;">
+
+        {{-- Listagem de artigos --}}
+        <div style="flex: 1 1 auto; min-width: 0;">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+
+                    {{-- Subpastas --}}
+                    @if (!empty($folders))
+                        <h5 class="fw-bold mb-3">Subfolders</h5>
+                        <ul class="mb-4 ps-3 list-unstyled">
+                            @foreach ($folders as $folder)
+                                <li class="mb-2">
+                                    <a class="link-primary text-decoration-none fw-semibold"
+                                       href="{{ url('01_module_c/heritages/' . trim($path . '/' . $folder, '/')) }}">
+                                        📁 {{ ucfirst($folder) }}
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endif
+
+                    {{-- Páginas --}}
+                    @if (!empty($pages))
+                        <h5 class="fw-bold mb-3">Pages</h5>
+                        <ul class="list-unstyled">
+                            @foreach ($pages as $page)
+                                <li class="mb-4 pb-3 border-bottom">
+                                    <a class="d-block fw-semibold fs-5 text-dark text-decoration-none"
+                                       href="{{ url('01_module_c/heritages/' . $page['path']) }}">
+                                        {{ is_array($page['title'] ?? '') ? implode(' ', $page['title']) : ($page['title'] ?? 'No Title') }}
+                                    </a>
+                                    @if (!empty($page['summary']))
+                                        <p class="text-muted small mb-2">
+                                            {{ is_array($page['summary'] ?? '') ? implode(' ', $page['summary']) : ($page['summary'] ?? '') }}
+                                        </p>
+                                    @endif
+                                    <small class="text-secondary">
+                                        {{ \Carbon\Carbon::parse($page['date'])->format('d/m/Y') }}
+                                    </small>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @else
+                        <p class="text-muted fst-italic">No pages found in this folder.</p>
+                    @endif
+                </div>
+            </div>
+        </div>
+
+        {{-- Barra lateral de pesquisa --}}
+        <aside style="flex: 0 0 280px;">
+            <div class="card shadow-lg border-0" style="background: #f8f9fa00;">
+                <div class="card-body">
+                    <h2 class="h6 text-uppercase fw-bold text-secondary mb-3">Search</h2>
+                    <form action="{{ url('01_module_c/search') }}" method="GET" class="d-flex flex-column gap-2">
+                        <input type="text" name="q" class="form-control" placeholder="Type keyword..." value="{{ request('q') }}">
+                        <button type="submit" class="btn btn-dark w-100">Search</button>
+                    </form>
+                </div>
+            </div>
+        </aside>
+
+    </div>
 
 </div>
 @endsection

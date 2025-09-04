@@ -1,0 +1,127 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    line-height: 1.6;
+  }
+  
+  /* Container principal */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    display: flex;
+    gap: 2rem;
+  }
+  
+  /* Sidebar (Pesquisa e Tags) */
+  aside {
+    flex: 0 0 250px;
+    position: sticky;
+    top: 1rem;
+    height: fit-content;
+  }
+  
+  aside h2 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  aside input[type="text"] {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  aside button {
+    margin-top: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    background: #333;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  aside button:hover {
+    background: #555;
+  }
+  
+  /* Área de listagem */
+  main {
+    flex: 1;
+  }
+  
+  .listing-item {
+    border-bottom: 1px solid #ddd;
+    padding: 1rem 0;
+  }
+  
+  .listing-item h3 {
+    font-size: 1.4rem;
+    color: #0056b3;
+    text-decoration: none;
+    margin-bottom: 0.3rem;
+  }
+  
+  .listing-item h3 a {
+    color: inherit;
+    text-decoration: none;
+  }
+  
+  .listing-item h3 a:hover {
+    text-decoration: underline;
+  }
+  
+  .listing-item p {
+    color: #666;
+    font-size: 0.95rem;
+  }
+  
+  /* Estilo da imagem de capa com efeito spotlight */
+  .cover-container {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .cover-container img {
+    width: 100%;
+    height: auto;
+    display: block;
+    mask-image: radial-gradient(circle 300px at center, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
+    -webkit-mask-image: radial-gradient(circle 300px at center, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
+    transition: mask-position 0.2s, -webkit-mask-position 0.2s;
+  }
+  
+  /* Capitular no primeiro parágrafo */
+  main p:first-of-type::first-letter {
+    font-size: 3rem;
+    float: left;
+    line-height: 1;
+    padding-right: 0.3rem;
+    font-weight: bold;
+  }
+  
+  /* Zoom nas imagens do conteúdo */
+  main img {
+    max-width: 100%;
+    cursor: zoom-in;
+  }
+  
+  main img.zoomed {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1.5);
+    z-index: 1000;
+    cursor: zoom-out;
+  }
+  

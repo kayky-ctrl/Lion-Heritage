@@ -8,6 +8,7 @@
     @yield('meta')
     @yield('styles')
     @vite('resources/css/app.css')
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
