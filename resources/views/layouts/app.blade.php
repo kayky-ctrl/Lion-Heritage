@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $title ?? 'Heritage' }}</title>
+    <title>@yield('title', 'Heritage Explorer')</title>
+    @yield('meta')
+    @yield('styles')
     @vite('resources/css/app.css')
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gray-100 text-gray-800">
 
     <header class="bg-white shadow p-4">
@@ -15,8 +19,8 @@
                 <a href="{{ url('01_module_c') }}">Heritage Explorer</a>
             </h1>
             <form action="{{ url('01_module_c/search') }}" method="GET" class="flex">
-                <input type="text" name="q" placeholder="Search..."
-                       class="border rounded-l px-2 py-1" value="{{ request('q') }}">
+                <input type="text" name="q" placeholder="Search..." class="border rounded-l px-2 py-1"
+                    value="{{ request('q') }}">
                 <button type="submit" class="bg-black text-white px-3 rounded-r">Go</button>
             </form>
         </div>
@@ -32,4 +36,5 @@
 
     @yield('scripts')
 </body>
+
 </html>

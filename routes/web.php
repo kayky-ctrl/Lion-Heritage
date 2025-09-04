@@ -4,21 +4,24 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HeritageController;
 
 Route::prefix('01_module_c')->group(function () {
-    // Página inicial
-    Route::get('/', function () {
-        return view('heritages.home');
-    })->name('heritages.home');
 
-    // Lista todas as tags
-    Route::get('/tags', [HeritageController::class, 'tags'])->name('heritages.tags');
+    // A HOME precisa listar pastas e páginas da raiz
+    Route::get('/', [HeritageController::class, 'browse'])
+        ->name('heritages.index');
 
-    // Busca
-    Route::get('/search', [HeritageController::class, 'search'])->name('heritage.search');
+    // Lista TODAS as tags
+    Route::get('/tags', [HeritageController::class, 'tags'])
+        ->name('heritages.tags');
 
-    // Posts por tag
-    Route::get('/tags/{tag}', [HeritageController::class, 'byTag'])->name('heritages.byTag');
+    // Páginas por tag
+    Route::get('/tags/{tag}', [HeritageController::class, 'byTag'])
+        ->name('heritages.byTag');
 
-    // Navegação de pastas e páginas (deve ficar por último)
+    // Busca (OR por palavras separadas por "/" ou espaços)
+    Route::get('/search', [HeritageController::class, 'search'])
+        ->name('heritages.search');
+
+    // Navegação por pastas e páginas (deixa por último!)
     Route::get('/heritages/{path?}', [HeritageController::class, 'browse'])
         ->where('path', '.*')
         ->name('heritages.browse');
