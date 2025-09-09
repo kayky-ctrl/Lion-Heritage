@@ -5,13 +5,6 @@
 @section('content')
 <div class="container py-4">
 
-    {{-- Título principal --}}
-    <div class="d-flex justify-content-center mb-4">
-        <div class="bg-dark text-white rounded-3 px-4 py-2 fw-bold fs-4 text-center shadow-sm">
-            Listing Page Layout
-        </div>
-    </div>
-
     {{-- Layout principal: Lista + Sidebar --}}
     <div style="display: flex; flex-direction: row; gap: 2.5rem; align-items: flex-start;">
 
