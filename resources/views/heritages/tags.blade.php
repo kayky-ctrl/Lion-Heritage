@@ -11,14 +11,14 @@
             @foreach ($allTags as $tag)
                 @if (!empty(trim($tag)))
                     <a href="{{ url('01_module_c/tags/' . urlencode($tag)) }}" 
-                       class="bg-white rounded-lg shadow p-4 text-center hover:bg-gray-50 transition-colors">
+                       class="text-blue-600 hover:underline p-4"> {{-- Removido o estilo de card --}}
                         {{ $tag }}
                     </a>
                 @endif
             @endforeach
         </div>
     @else
-        <div class="bg-white rounded-lg shadow p-6 text-center">
+        <div class="p-6 text-center">
             <p class="text-gray-600 text-lg">Nenhuma tag encontrada.</p>
             <p class="text-sm text-gray-500 mt-2">As tags aparecerão automaticamente quando forem adicionadas aos posts.</p>
         </div>

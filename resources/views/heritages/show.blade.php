@@ -6,7 +6,7 @@
     <meta property="og:title" content="{{ $post['title'] }}">
     <meta property="og:description" content="{{ $post['summary'] ?? substr(strip_tags($post['content']), 0, 160) }}">
     @if (!empty($post['cover']))
-        <meta property="og:image" content="{{ $post['cover'] }}">
+        <meta property="og:image" content="{{ url($post['cover']) }}">
     @endif
     <meta property="og:url" content="{{ url()->current() }}">
     <meta name="twitter:card" content="summary_large_image">
@@ -14,29 +14,114 @@
 
 @section('styles')
     <style>
-        .cover-image {
+        body {
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .cover-container {
+            width: 100%;
+            height: 500px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             position: relative;
             overflow: hidden;
-            border-radius: 0.5rem;
+            --spot-size: 300px;
+            --overlay-color: rgba(0, 0, 0, 0.555);
+            --edge-opacity: 0.9; /* Adicionada para controlar a opacidade das bordas */
         }
 
-        .cover-image img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        .cover-spotlight {
+        .cover-container::before {
+            content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle 300px at var(--x, 50%) var(--y, 50%),
-                    rgba(255, 255, 255, 0) 0%,
-                    rgba(0, 0, 0, 0.8) 100%);
-            pointer-events: none;
-            transition: opacity 0.3s ease;
+            background-color: var(--overlay-color);
+            transition: background-color 0.2s ease-in;
+            mask-image: none;
+        }
+        .cover-container:not(:hover)::before {
+            background-color: var(--overlay-color);
+        }
+
+        .content-container {
+            margin-top: -5rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .title-overlay {
+            width: 80%;
+            height: auto;
+            background-color: rgb(0, 0, 0);
+            color: white;
+            padding: 2rem;
+            box-sizing: border-box;
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        .title-overlay h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .content-layout {
+            display: flex;
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            align-items: flex-start;
+        }
+
+        .main-content {
+            flex: 1;
+            background: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .aside-info {
+            flex-grow: 0;
+            flex-shrink: 0;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .aside-info p,
+        .aside-info ul {
+            margin-bottom: 0.5rem;
+        }
+
+        .aside-info p strong {
+            color: #333;
+        }
+
+        .aside-info ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .aside-info ul li {
+            margin-bottom: 0.25rem;
+        }
+
+        .aside-info ul li a {
+            color: #2a69b9;
+            text-decoration: none;
+        }
+
+        .aside-info ul li a:hover {
+            text-decoration: underline;
         }
 
         .prose p:first-of-type::first-letter {
@@ -46,6 +131,12 @@
             margin-right: 0.1em;
             font-weight: bold;
             font-family: serif;
+        }
+
+        .prose img {
+            max-width: 100%;
+            height: auto;
+            display: block;
         }
 
         .image-modal {
@@ -81,41 +172,59 @@
             border: none;
             cursor: pointer;
         }
+
+        @media (max-width: 768px) {
+            .content-layout {
+                flex-direction: column;
+            }
+
+            .aside-info {
+                flex-basis: auto;
+                width: 100%;
+            }
+        }
     </style>
 @endsection
 
 @section('content')
-    <article class="bg-white rounded-lg shadow p-6">
+    <div class="container-fluid p-0">
         @if (!empty($post['cover']))
-            <div class="cover-image mb-6" id="coverImage">
-                <img src="{{ $post['cover'] }}" alt="{{ $post['title'] }}">
-                <div class="cover-spotlight" id="coverSpotlight"></div>
+            <div class="cover-container" style="background-image: url('{{ url($post['cover']) }}');">
             </div>
         @endif
 
-        <h2 class="text-3xl font-bold mb-2">{{ $post['title'] }}</h2>
-
-        <div class="flex justify-between text-sm text-gray-600 mb-4">
-            <span>{{ \Carbon\Carbon::parse($post['date'])->format('d/m/Y') }}</span>
-
-            @if (!empty($post['tags']) && is_array($post['tags']) && count($post['tags']) > 0)
-                <span>
-                    Tags:
-                    @foreach ($post['tags'] as $tag)
-                        @if (!empty(trim($tag)))
-                            <a href="{{ url('01_module_c/tags/' . urlencode($tag)) }}"
-                               class="text-blue-600 hover:underline">{{ $tag }}</a>
-                            @if (!$loop->last),@endif
-                        @endif
-                    @endforeach
-                </span>
-            @endif
+        <div class="content-container">
+            <div class="title-overlay">
+                <h1>{{ $post['title'] }}</h1>
+            </div>
+            <div class="content-layout">
+                <div class="main-content">
+                    <div class="prose max-w-none">
+                        {!! $post['content'] !!}
+                    </div>
+                </div>
+                <div class="aside-info">
+                    <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($post['date'])->format('Y-m-d') }}</p>
+                    @if (!empty($post['tags']) && is_array($post['tags']) && count($post['tags']) > 0)
+                        <p><strong>tags:</strong></p>
+                        <ul>
+                            @foreach ($post['tags'] as $tag)
+                                @if (!empty(trim($tag)))
+                                    <li>
+                                        <a href="{{ url('01_module_c/tags/' . urlencode($tag)) }}"
+                                            class="text-blue-600 hover:underline">{{ $tag }}</a>
+                                    </li>
+                                @endif
+                            @endforeach
+                        </ul>
+                    @endif
+                    @if ($post['draft'])
+                        <p class="text-red-500 font-semibold mt-4">Draft: true</p>
+                    @endif
+                </div>
+            </div>
         </div>
-
-        <div class="prose max-w-none">
-            {!! $post['content'] !!}
-        </div>
-    </article>
+    </div>
 
     <div class="image-modal" id="imageModal">
         <button class="image-modal-close" onclick="closeModal()">&times;</button>
@@ -125,27 +234,6 @@
 
 @section('scripts')
     <script>
-        const coverImage = document.getElementById('coverImage');
-        if (coverImage) {
-            coverImage.addEventListener('mousemove', function(e) {
-                const spotlight = document.getElementById('coverSpotlight');
-                const rect = this.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-
-                spotlight.style.setProperty('--x', x + 'px');
-                spotlight.style.setProperty('--y', y + 'px');
-            });
-
-            coverImage.addEventListener('mouseleave', function() {
-                document.getElementById('coverSpotlight').style.opacity = '0';
-            });
-
-            coverImage.addEventListener('mouseenter', function() {
-                document.getElementById('coverSpotlight').style.opacity = '1';
-            });
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
             const images = document.querySelectorAll('.prose img');
             const modal = document.getElementById('imageModal');
@@ -161,6 +249,9 @@
                 });
             });
 
+            const closeModalBtn = document.querySelector('.image-modal-close');
+            closeModalBtn.addEventListener('click', closeModal);
+
             modal.addEventListener('click', function(e) {
                 if (e.target === modal) {
                     closeModal();
@@ -172,6 +263,27 @@
                     closeModal();
                 }
             });
+
+            const coverContainer = document.querySelector('.cover-container');
+
+            if (coverContainer) {
+                // Escuta o movimento do mouse para atualizar o holofote
+                coverContainer.addEventListener('mousemove', function(e) {
+                    const rect = coverContainer.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    // Aplica a máscara para "abrir um buraco" no overlay
+                    this.style.setProperty('mask-image',
+                        `radial-gradient(circle var(--spot-size) at ${x}px ${y}px, transparent 0%, rgba(0, 0, 0, var(--edge-opacity)) 100%)`
+                    );
+                });
+
+                // Quando o mouse sair da imagem, remove a máscara
+                coverContainer.addEventListener('mouseleave', function() {
+                    this.style.setProperty('mask-image', 'none');
+                });
+            }
         });
 
         function closeModal() {

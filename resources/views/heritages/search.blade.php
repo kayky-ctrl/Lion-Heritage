@@ -9,7 +9,7 @@
     @if(!empty($results) && count($results) > 0)
         <div class="grid gap-4">
             @foreach($results as $post)
-                <div class="bg-white rounded-lg shadow p-6">
+                <div class="p-6 border-b border-gray-200"> {{-- Removido o estilo de card --}}
                     <h3 class="text-xl font-semibold mb-2">
                         <a href="{{ url('01_module_c/heritages/' . $post['date'] . '-' . Illuminate\Support\Str::slug($post['title'])) }}" 
                            class="text-blue-600 hover:underline">
@@ -39,7 +39,7 @@
             @endforeach
         </div>
     @else
-        <div class="bg-white rounded-lg shadow p-6 text-center">
+        <div class="p-6 text-center border-b border-gray-200">
             <p class="text-gray-600 text-lg">Nenhum resultado encontrado.</p>
             <p class="text-sm text-gray-500 mt-2">Tente usar palavras-chave diferentes ou verifique a ortografia.</p>
             <a href="{{ url('01_module_c') }}" class="text-blue-600 hover:underline mt-4 inline-block">
