@@ -11,7 +11,7 @@
             @foreach($posts as $post)
                 <div class="bg-white rounded-lg shadow p-6">
                     <h3 class="text-xl font-semibold mb-2">
-                        <a href="{{ url('01_module_c/heritages/' . $post['date'] . '-' . Illuminate\Support\Str::slug($post['title'])) }}" 
+                        <a href="{{ url('01_module_c/heritages/' . $post['path']) }}"
                            class="text-blue-600 hover:underline">
                             {{ $post['title'] }}
                         </a>

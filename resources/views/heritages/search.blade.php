@@ -9,9 +9,9 @@
     @if(!empty($results) && count($results) > 0)
         <div class="grid gap-4">
             @foreach($results as $post)
-                <div class="p-6 border-b border-gray-200"> {{-- Removido o estilo de card --}}
+                <div class="p-6 border-b border-gray-200">
                     <h3 class="text-xl font-semibold mb-2">
-                        <a href="{{ url('01_module_c/heritages/' . $post['date'] . '-' . Illuminate\Support\Str::slug($post['title'])) }}" 
+                        <a href="{{ url('01_module_c/heritages/' . $post['path']) }}"
                            class="text-blue-600 hover:underline">
                             {{ $post['title'] }}
                         </a>
